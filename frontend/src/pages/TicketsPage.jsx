@@ -61,7 +61,7 @@ const TicketsPage = () => {
 
     try {
       const headers = await getAuthHeaders()
-      const { data } = await axios.get(`${API_BASE}/api/tickets`, { headers })
+      const { data } = await axios.get(`${API_BASE}/api/tickets/my`, { headers })
 
       const ticketList = data.data || data
       setTickets(Array.isArray(ticketList) ? ticketList : [])
