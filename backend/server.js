@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import publicRoutes from './routes/publicRoute.js'
 import ticketsRoutes from './routes/ticketRoute.js'
 import adminRoutes from './routes/adminRoute.js'
+import logRoutes from './routes/logRoute.js'
 import 'dotenv/config'
 
 const app = express()
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 app.use('/api', publicRoutes)
 app.use('/api/tickets', ticketsRoutes)
 app.use('/api', adminRoutes)
+app.use('/api/logs', logRoutes)
 
 // error handler fallback
 app.use((err, req, res, next) => {

@@ -1,4 +1,5 @@
 import Ticket from "../models/ticketModel.js";
+import { appLogger } from "../middleware/logger.js";
 
 export const getTickets = async (req, res) => {
   try {
@@ -8,7 +9,7 @@ export const getTickets = async (req, res) => {
       data: tickets,
     });
   } catch (error) {
-    console.error("Error fetching tickets:", error);
+    appLogger.error("Error fetching tickets:", error);
 
     return res.status(500).json({
       status: "error",
@@ -43,14 +44,20 @@ export const createTicket = async (req, res) => {
     };
 
     await Ticket.create(newTicket);
-
+    // Log the ticket creation
+    appLogger.info("TICKET_CREATED", {
+      ticketId: newTicket.id,
+      title: newTicket.title,
+      createdBy: createdBy,
+      priority: newTicket.priority,
+    });
     return res.status(201).json({
       status: "success",
       message: "Ticket created successfully",
       data: newTicket,
     });
   } catch (error) {
-    console.error("Error creating ticket:", error);
+    appLogger.error("Error creating ticket:", error);
 
     return res.status(500).json({
       status: "error",
@@ -76,7 +83,7 @@ export const getMyTickets = async (req, res) => {
       count: myTickets.length,
     });
   } catch (error) {
-    console.error("Error fetching user tickets:", error);
+    appLogger.error("Error fetching user tickets:", error);
 
     return res.status(500).json({
       status: "error",
@@ -95,7 +102,7 @@ export const getOpenTicketsCount = async (req, res) => {
       count: openTicketsCount,
     });
   } catch (error) {
-    console.error("Error fetching open tickets count:", error);
+    appLogger.error("Error fetching open tickets count:", error);
     return res.status(500).json({
       status: "error",
       message: "Failed to fetch open tickets count",
@@ -113,7 +120,7 @@ export const getClosedTicketsCount = async (req, res) => {
       count: closedTicketsCount,
     });
   } catch (error) {
-    console.error("Error fetching closed tickets count:", error);
+    appLogger.error("Error fetching closed tickets count:", error);
     return res.status(500).json({
       status: "error",
       message: "Failed to fetch closed tickets count",
@@ -141,7 +148,7 @@ export const getPriorityTicketsCount = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching priority tickets count:", error);
+    appLogger.error("Error fetching priority tickets count:", error);
     return res.status(500).json({
       status: "error",
       message: "Failed to fetch priority tickets count",
@@ -157,7 +164,7 @@ export const getAllTicketsCount = async (req, res) => {
       count: totalTicketsCount,
     });
   } catch (error) {
-    console.error("Error fetching total tickets count:", error);
+    appLogger.error("Error fetching total tickets count:", error);
     return res.status(500).json({
       status: "error",
       message: "Failed to fetch total tickets count",
