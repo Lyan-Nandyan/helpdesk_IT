@@ -189,3 +189,131 @@ export const getAllTicketsCount = async (req, res) => {
     });
   }
 };
+
+export const updateTicketStatus = async (req, res) => {
+  try {
+    const { ticketId } = req.params;
+    const { status } = req.body;
+
+    if (!status || !["open", "inprogress", "closed"].includes(status)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Status tidak valid",
+      });
+    }
+
+    const ticket = await Ticket.findOne({ where: { id_ticket: ticketId } });
+
+    if (!ticket) {
+      return res.status(404).json({
+        status: "error",
+        message: "Ticket not found",
+      });
+    }
+
+    ticket.status = status;
+    await ticket.save();
+
+    appLogger.info("TICKET_STATUS_UPDATED", {
+      ticketId: ticket.id_ticket,
+      newStatus: status,
+      changedBy: req.user?.preferred_username || req.user?.email || "unknown",
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Ticket status updated successfully",
+      data: ticket,
+    });
+  } catch (error) {
+    appLogger.error("Error updating ticket status:", error);
+
+    return res.status(500).json({
+      status: "error",
+      message: "Failed to update ticket status",
+    });
+  }
+};
+
+export const deleteTicket = async (req, res) => {
+  try {
+    const { ticketId } = req.params;
+    const ticket = await Ticket.findOne({ where: { id_ticket: ticketId } });
+
+    if (!ticket) {
+      return res.status(404).json({
+        status: "error",
+        message: "Ticket not found",
+      });
+    }
+
+    const deletedTicketInfo = {
+      id: ticket.id_ticket,
+      title: ticket.title,
+    };
+
+    await ticket.destroy();
+
+    appLogger.info("TICKET_DELETED", {
+      ticketId: deletedTicketInfo.id,
+      title: deletedTicketInfo.title,
+      deletedBy: req.user?.preferred_username || req.user?.email || "unknown",
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Ticket deleted successfully",
+    });
+  } catch (error) {
+    appLogger.error("Error deleting ticket:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "Failed to delete ticket",
+    });
+  }
+};
+
+export const updatepriority = async (req, res) => {
+  try {
+    const { ticketId } = req.params;
+    const { priority } = req.body;
+
+    if (!priority || !["low", "medium", "high"].includes(priority)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Priority tidak valid",
+      });
+    }
+
+    const ticket = await Ticket.findOne({ where: { id_ticket: ticketId } });
+
+    if (!ticket) {
+      return res.status(404).json({
+        status: "error",
+        message: "Ticket not found",
+      });
+    }
+
+    ticket.priority = priority;
+    await ticket.save();
+
+    appLogger.info("TICKET_PRIORITY_UPDATED", {
+      ticketId: ticket.id_ticket,
+      newPriority: priority,
+      changedBy: req.user?.preferred_username || req.user?.email || "unknown",
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Ticket priority updated successfully",
+      data: ticket,
+    });
+  } catch (error) {
+    appLogger.error("Error updating ticket priority:", error);
+
+    return res.status(500).json({
+      status: "error",
+      message: "Failed to update ticket priority",
+    });
+  }
+};
