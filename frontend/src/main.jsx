@@ -7,9 +7,9 @@ import { AuthProvider } from './auth/AuthContext'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   // Kalau keycloak double-init, hilangkan StrictMode
-    <AuthProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </AuthProvider>
+  <AuthProvider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </AuthProvider>
 )

@@ -232,12 +232,12 @@ const TicketsPage = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  
+
   const canCreateTicket = hasRole('user')
 
   const getAuthHeaders = useCallback(async () => {
     const token = await getValidToken()
-    
+
     if (!token) {
       throw new Error('Token tidak tersedia')
     }
@@ -250,11 +250,11 @@ const TicketsPage = () => {
 
   const handleError = useCallback((err) => {
     console.error('API Error:', err)
-    
+
     if (err.response?.status === 401) {
       return 'Token tidak valid, silakan login ulang'
     }
-    
+
     if (err.response?.status === 403) {
       return 'Anda tidak memiliki akses ke resource ini'
     }
@@ -312,7 +312,7 @@ const TicketsPage = () => {
 
       setSuccess('Tiket berhasil dibuat!')
       await fetchTickets()
-      
+
       setTimeout(() => setSuccess(''), 3000)
     } catch (err) {
       const errorMessage = handleError(err)

@@ -125,10 +125,6 @@ const AuthProvider = ({ children }) => {
     getValidToken,
   }
 
-  if (!initialized) {
-    return <div>{LOADING_MESSAGE}</div>
-  }
-
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
