@@ -128,6 +128,24 @@ export const getClosedTicketsCount = async (req, res) => {
   }
 };
 
+export const getInprogressTicketsCount = async (req, res) => {
+  try {
+    const inprogressTicketsCount = await Ticket.count({
+      where: { status: "inprogress" },
+    });
+    return res.status(200).json({
+      status: "success",
+      count: inprogressTicketsCount,
+    });
+  } catch (error) {
+    appLogger.error("Error fetching inprogress tickets count:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "Failed to fetch inprogress tickets count",
+    });
+  }
+};
+
 export const getPriorityTicketsCount = async (req, res) => {
   try {
     const highPriorityCount = await Ticket.count({
