@@ -4,7 +4,6 @@ import cors from 'cors'
 import morgan from 'morgan'
 import publicRoutes from './routes/publicRoute.js'
 import ticketsRoutes from './routes/ticketRoute.js'
-import adminRoutes from './routes/adminRoute.js'
 import logRoutes from './routes/logRoute.js'
 import 'dotenv/config'
 
@@ -25,7 +24,6 @@ app.get('/', (req, res) => {
 // pasang route dengan prefix
 app.use('/api', publicRoutes)
 app.use('/api/tickets', ticketsRoutes)
-app.use('/api', adminRoutes)
 app.use('/api/logs', logRoutes)
 
 // error handler fallback
