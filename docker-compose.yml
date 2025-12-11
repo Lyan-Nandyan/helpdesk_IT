@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   db:
@@ -13,6 +13,78 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-uroot",
+          "-p${MYSQL_ROOT_PASSWORD}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  backend:
+    image: node:20-alpine
+    container_name: helpdesk-backend
+    working_dir: /app
+
+    # baca semua variabel dari .env
+    env_file:
+      - .env
+
+    environment:
+      # jika BACKEND_PORT tidak ada di .env → fallback 4000
+      PORT: ${BACKEND_PORT:-4000}
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USERNAME: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      DB_HOST: db
+      NODE_ENV: ${NODE_ENV:-development}
+      KEYCLOAK_ISSUER: ${KEYCLOAK_ISSUER}
+      KEYCLOAK_AUDIENCE: ${KEYCLOAK_AUDIENCE}
+      KEYCLOAK_JWKS_URI: ${KEYCLOAK_JWKS_URI}
+
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+    command: sh -c "npm install && node server.js"
+
+    ports:
+      # expose backend ke host pakai BACKEND_PORT (default 4000)
+      - "${BACKEND_PORT:-4000}:4000"
+
+    # Agar container bisa akses localhost dari host machine
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    restart: unless-stopped
+
+  frontend:
+    image: node:20-alpine
+    container_name: helpdesk-frontend
+    working_dir: /app
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: sh -c "npm install; npm run dev -- --host --port 5173"
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
     restart: unless-stopped
 
 volumes:
