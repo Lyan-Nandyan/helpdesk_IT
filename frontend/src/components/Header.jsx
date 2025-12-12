@@ -79,8 +79,11 @@ const Header = () => {
             {authenticated && (
               <>
                 <div className="hidden sm:flex flex-col items-end">
-                  <span className="text-white text-sm font-medium">
+                  <span className="text-white text-2xl font-bold">
                     {profile?.username || profile?.email}
+                  </span>
+                  <span className="text-white text-sm">
+                    {profile?.firstName+" " + (profile?.lastName || '') || 'Pengguna'}
                   </span>
                 </div>
                 <button
