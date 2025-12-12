@@ -116,7 +116,7 @@ const LogEntry = ({ log }) => {
     )
 }
 
-function ManagerPage() {
+const ManagerPage = () => {
     const { keycloak } = useAuth()
     const [logs, setLogs] = useState([])
     const [isLoading, setIsLoading] = useState(false)

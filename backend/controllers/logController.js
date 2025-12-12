@@ -33,11 +33,12 @@ export const getLogs = (req, res) => {
     const lines = content.trim().split("\n").filter((line) => line.length > 0);
     const lastLines = lines.slice(-MAX_LOG_LINES);
     const parsedLogs = lastLines.map(parseLogLine);
+    const descLogs = parsedLogs.reverse();
 
     return res.status(200).json({
       status: "success",
-      data: parsedLogs,
-      count: parsedLogs.length,
+      data: descLogs,
+      count: descLogs.length,
     });
   } catch (error) {
     appLogger.error("Error fetching logs:", error);

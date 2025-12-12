@@ -3,7 +3,9 @@ import { appLogger } from "../middleware/logger.js";
 
 export const getTickets = async (req, res) => {
   try {
-    const tickets = await Ticket.findAll();
+    const tickets = await Ticket.findAll({
+      order: [['createdAt', 'DESC']],
+    });
     return res.status(200).json({
       status: "success",
       data: tickets,
@@ -75,6 +77,7 @@ export const getMyTickets = async (req, res) => {
       where: {
         createdBy: username,
       },
+      order: [['createdAt', 'DESC']],
     });
 
     return res.status(200).json({
