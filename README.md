@@ -25,33 +25,6 @@ Sebelum memulai, pastikan sistem Anda memiliki:
 
 ---
 
-## Arsitektur Sistem
-
-```
-┌─────────────────┐
-│   Keycloak      │ (Port 8080)
-│   (External)    │
-└────────┬────────┘
-         │
-         │ Authentication
-         │
-┌────────▼────────────────────────────────┐
-│           Docker Network                 │
-│                                          │
-│  ┌──────────────┐  ┌─────────────────┐ │
-│  │   Frontend   │  │     Backend     │ │
-│  │  (Vite Dev)  │◄─┤   (Node.js)     │ │
-│  │  Port: 5173  │  │   Port: 4000    │ │
-│  └──────────────┘  └────────┬────────┘ │
-│                              │          │
-│                     ┌────────▼────────┐ │
-│                     │   MySQL DB      │ │
-│                     │   Port: 3306    │ │
-│                     └─────────────────┘ │
-└─────────────────────────────────────────┘
-```
-
----
 
 ## Setup dan Instalasi
 
